@@ -13,6 +13,7 @@ app.use((req, res, next) => {
 
   next();
 });
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -26,7 +27,7 @@ app.post("/api/check", (req, res) => {
     const video = new URL(url);
 
     if (!["http:", "https:"].includes(video.protocol)) {
-      throw new Error();
+      throw new Error("Geçersiz bağlantı");
     }
 
     const supported = /\.(mp4|webm|mov|m4v)$/i.test(video.pathname);
@@ -38,16 +39,16 @@ app.post("/api/check", (req, res) => {
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       downloadUrl: video.href,
-      message: "Video bağlantısı hazır."
+      message: "Video bağlantısı hazır!"
     });
 
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
-      message: "Geçersiz video bağlantısı."
+      message: "Geçerli bir video bağlantısı gir."
     });
   }
 });
